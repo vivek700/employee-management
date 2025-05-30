@@ -1,17 +1,17 @@
 import express from "express";
-import Employee from "../models/employee";
+import Employee from "../models/employee.js";
 
 const router = express.Router();
 
 router.get("/employee", async (req, res) => {
   try {
     const employees = await Employee.find()
-    res.status(200).json({
+    return res.status(200).json({
       employees
     })
   } catch (error) {
     console.error(error)
-    res.status(500).json({
+    return res.status(500).json({
       message: 'Internal Server Error.'
     })
   }
@@ -24,7 +24,7 @@ router.post("employee", async (req, res) => {
     const { firstname, lastname, email, birthdate, department } = req.body
 
     if (!(firstname && lastname && email && birthdate && department)) {
-      res.send("Please enter the details.")
+      return res.send("Please enter the details.")
     }
     const checkEmployee = await Employee.findOne({ firstname, email })
     if (checkEmployee) {
