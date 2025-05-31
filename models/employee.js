@@ -2,14 +2,14 @@ import mongoose, { Schema } from "mongoose";
 
 const employeeSchema = Schema(
   {
-    firstName: {
+    firstname: {
       type: String,
       required: true,
     },
-    lastName: {
+    lastname: {
       type: String,
     },
-    birthDate: {
+    birthdate: {
       type: Date,
       required: true,
     },
