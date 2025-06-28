@@ -23,6 +23,7 @@ router.post("/employee", async (req, res) => {
   try {
     const { firstname, lastname, email, birthdate, department } = req.body
 
+    console.log(firstname, lastname, email, birthdate, department)
     if (!(firstname && lastname && email && birthdate && department)) {
       return res.send("Please enter the details.")
     }

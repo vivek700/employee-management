@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/department", async (req, res) => {
   const departments = await Department.find();
-  return res.send(departments);
+  return res.json(departments);
 });
 
 router.post("/department", async (req, res) => {
@@ -22,7 +22,7 @@ router.post("/department", async (req, res) => {
     }
     const department = new Department({ name });
     await department.save();
-    return res.status(201).send("Department created successfully.");
+    return res.status(201).json("Department created successfully.");
   } catch (error) {
     console.error(error);
     return res.status(500).json({
