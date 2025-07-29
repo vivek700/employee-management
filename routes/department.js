@@ -8,6 +8,16 @@ router.get("/department", async (req, res) => {
   return res.json(departments);
 });
 
+router.get("/department/:id", async (req, res) => {
+  try {
+    const id = req.params.id
+    const department = await Department.findById(id)
+    res.status(200).json(department)
+  } catch (error) {
+    console.error(error)
+  }
+
+})
 router.post("/department", async (req, res) => {
   try {
     const { name } = req.body;
@@ -46,7 +56,7 @@ router.put("/department", async (req, res) => {
     );
     if (!updatedDepartment) {
       return res.status(404).json({
-        message: "User not found",
+        message: "Department not found",
       });
     }
     res.status(200).json(updatedDepartment);
