@@ -34,7 +34,7 @@ router.post("/employee", async (req, res) => {
   try {
     const { firstname, lastname, email, birthdate, department } = req.body;
 
-    if (!(firstname && lastname && email && birthdate && department)) {
+    if (!(firstname && email && birthdate)) {
       return res.send("Please enter the details.");
     }
     const checkEmployee = await Employee.findOne({ firstname, email });

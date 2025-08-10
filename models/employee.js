@@ -19,7 +19,6 @@ const employeeSchema = Schema(
     },
     department: {
       type: String,
-      required: true,
     },
   },
   {
