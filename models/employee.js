@@ -10,7 +10,7 @@ const employeeSchema = Schema(
       type: String,
     },
     birthdate: {
-      type: Date,
+      type: String,
       required: true,
     },
     email: {
@@ -24,7 +24,7 @@ const employeeSchema = Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Employee = mongoose.model("Employee", employeeSchema);
