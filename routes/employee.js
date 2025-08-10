@@ -32,8 +32,7 @@ router.get("/employee/:id", async (req, res) => {
 
 router.post("/employee", async (req, res) => {
   try {
-    const { firstname, lastname, email, birthdate, department } = req.body;
-
+    const { firstname, lastname, email, birthdate, departments } = req.body;
     if (!(firstname && email && birthdate)) {
       return res.send("Please enter the details.");
     }
@@ -48,7 +47,7 @@ router.post("/employee", async (req, res) => {
       lastname,
       email,
       birthdate,
-      department,
+      departments,
     });
     await employee.save();
     return res.status(201).json({
@@ -65,9 +64,9 @@ router.post("/employee", async (req, res) => {
 
 router.put("/employee", async (req, res) => {
   try {
-    const { id, firstname, lastname, email, birthdate, department } = req.body;
+    const { id, firstname, lastname, email, birthdate, departments } = req.body;
 
-    if (!(id && firstname && lastname && email && birthdate && department)) {
+    if (!(id && firstname && email && birthdate)) {
       return res.send("Please enter the details.");
     }
     const updatedEmployee = await Employee.findByIdAndUpdate(
@@ -77,7 +76,7 @@ router.put("/employee", async (req, res) => {
         lastname,
         email,
         birthdate,
-        department,
+        departments,
       },
       {
         new: true,
