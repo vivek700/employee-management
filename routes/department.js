@@ -10,14 +10,13 @@ router.get("/department", async (req, res) => {
 
 router.get("/department/:id", async (req, res) => {
   try {
-    const id = req.params.id
-    const department = await Department.findById(id)
-    res.status(200).json(department)
+    const id = req.params.id;
+    const department = await Department.findById(id);
+    res.status(200).json(department);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-
-})
+});
 router.post("/department", async (req, res) => {
   try {
     const { name } = req.body;
@@ -49,10 +48,17 @@ router.put("/department", async (req, res) => {
         message: "Please enter the details.",
       });
     }
+    const checkDepartment = await Department.findOne({ name: newName });
+    if (checkDepartment) {
+      return res.status(409).json({
+        message: "Department already exists.",
+      });
+    }
+
     const updatedDepartment = await Department.findOneAndUpdate(
       { name: oldName },
       { name: newName },
-      { new: true }
+      { new: true },
     );
     if (!updatedDepartment) {
       return res.status(404).json({

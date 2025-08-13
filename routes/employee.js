@@ -69,6 +69,13 @@ router.put("/employee", async (req, res) => {
     if (!(id && firstname && email && birthdate)) {
       return res.status(400).json({ message: "Please enter the details." });
     }
+    const checkEmployee = await Employee.findOne({ firstname, email });
+    if (checkEmployee) {
+      return res.status(409).json({
+        message: "Employee already exists.",
+      });
+    }
+
     const updatedEmployee = await Employee.findByIdAndUpdate(
       id,
       {
