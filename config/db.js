@@ -1,9 +1,10 @@
 import { connect } from "mongoose";
 
-const url = "mongodb://mongo:27017/docker-node-mongo";
-
-const connectDb = async function () {
+const connectDb = async function (url) {
   try {
+    if (!url) {
+      throw new Error("MONGO_URI environment variable is not set.");
+    }
     await connect(url);
     console.log("Connected to mongoDB");
   } catch (error) {

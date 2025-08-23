@@ -10,9 +10,11 @@ import { enforceApiKey } from "./middleware/apiKeyAuth.js";
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
-const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY;
 
-connectDb();
+const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY;
+const url = process.env.MONGO_URI;
+
+connectDb(url);
 
 app.use(cors({ origin: false }));
 app.use(express.json());
