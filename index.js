@@ -6,6 +6,7 @@ import connectDb from "./config/db.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import { enforceApiKey } from "./middleware/apiKeyAuth.js";
+import { seedDB } from "./config/seed.js";
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ const url = process.env.MONGO_URI;
 
 connectDb(url);
 
+seedDB();
 app.use(cors({ origin: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
