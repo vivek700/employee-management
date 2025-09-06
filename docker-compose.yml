@@ -1,14 +1,32 @@
+
 services:
   web:
     build: .
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
-      - /app/node_modules
+        # This bind mount syncs your source code from your local machine to the container.
+        # It's what enables hot-reloading.
+        - .:/app
+        # This named volume tells Docker to keep the node_modules installed inside the container
+        # separate from your local project directory. This is the key fix for the module not found error.
+        - node_modules_data:/app/node_modules
     depends_on:
       - mongo
+        # Override the CMD in your Dockerfile for development.
+        # This ensures your app restarts automatically when code changes.
+    command: npm run dev
+
   mongo:
     image: mongo
     ports:
       - "27017:27017"
+    volumes:
+  # This named volume persists the MongoDB data, so you don't lose it
+  # when you stop and start the container.
+      - mongo_data:/data/db
+
+volumes:
+  node_modules_data:
+  mongo_data:
+

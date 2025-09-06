@@ -18,6 +18,7 @@ const employeeSchema = Schema(
       requird: true,
     },
     departments: [String],
+    userId: String,
   },
   {
     timestamps: true,
