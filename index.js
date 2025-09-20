@@ -7,6 +7,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { enforceApiKey } from "./middleware/apiKeyAuth.js";
 import { seedDB } from "./config/seed.js";
+import cookieParser from "cookie-parser";
+import { authenticateUser } from "./middleware/authMiddleware.js";
+import authRouter from "./routes/auth.js";
 
 dotenv.config();
 const app = express();
@@ -16,8 +19,8 @@ const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY;
 const url = process.env.MONGO_URI;
 
 connectDb(url);
-seedDB();
 
+app.use(cookieParser());
 app.use(cors({ origin: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,8 +30,20 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 
-app.use("/", enforceApiKey(INTERNAL_API_KEY), employeeRouter);
-app.use("/", enforceApiKey(INTERNAL_API_KEY), departmentRouter);
+app.use("/auth", authRouter);
+
+app.use(
+  "/employees",
+  enforceApiKey(INTERNAL_API_KEY),
+  authenticateUser,
+  employeeRouter,
+);
+app.use(
+  "/departments",
+  enforceApiKey(INTERNAL_API_KEY),
+  authenticateUser,
+  departmentRouter,
+);
 
 app.post("/reset-data", enforceApiKey(INTERNAL_API_KEY), async (req, res) => {
   try {

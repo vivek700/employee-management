@@ -3,12 +3,13 @@ import Department from "../models/department.js";
 
 const router = express.Router();
 
-router.get("/department", async (req, res) => {
-  const departments = await Department.find();
+router.get("/", async (req, res) => {
+  const userId = req.cookies["better-auth-user"];
+  const departments = await Department.find({ userId }).exec();
   return res.json(departments);
 });
 
-router.get("/department/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const department = await Department.findById(id);
@@ -17,19 +18,22 @@ router.get("/department/:id", async (req, res) => {
     console.error(error);
   }
 });
-router.post("/department", async (req, res) => {
+router.post("/", async (req, res) => {
+  const userId = req.cookies["better-auth-user"];
   try {
     const { name } = req.body;
     if (!name) {
       return res.status(400).json("Please enter the department name.");
     }
-    const checkDepartment = await Department.findOne({ name });
-    if (checkDepartment) {
+    const checkDepartment = await Department.find({ userId });
+    const found = checkDepartment.find((item) => item.name === name);
+    if (found) {
       return res.status(409).json({
         message: "Department already exists.",
       });
     }
-    const department = new Department({ name });
+
+    const department = new Department({ name, userId });
     await department.save();
     return res.status(201).json("Department created successfully.");
   } catch (error) {
@@ -40,23 +44,26 @@ router.post("/department", async (req, res) => {
   }
 });
 
-router.put("/department", async (req, res) => {
+router.put("/", async (req, res) => {
+  const userId = req.cookies["better-auth-user"];
   try {
-    const { oldName, newName } = req.body;
-    if (!(oldName && newName)) {
+    const { id, newName } = req.body;
+    console.log(id, newName);
+    if (!newName) {
       return res.status(400).json({
         message: "Please enter the details.",
       });
     }
-    const checkDepartment = await Department.findOne({ name: newName });
-    if (checkDepartment) {
+    const checkDepartment = await Department.find({ userId });
+    const found = checkDepartment.find((item) => item.name === newName);
+    if (found) {
       return res.status(409).json({
         message: "Department already exists.",
       });
     }
 
-    const updatedDepartment = await Department.findOneAndUpdate(
-      { name: oldName },
+    const updatedDepartment = await Department.findByIdAndUpdate(
+      id,
       { name: newName },
       { new: true },
     );
@@ -73,18 +80,13 @@ router.put("/department", async (req, res) => {
     });
   }
 });
-router.delete("/department", async (req, res) => {
+router.delete("/", async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) {
-      return res.status(400).json({
-        message: "Please enter the details.",
-      });
-    }
-    const deleted = await Department.deleteOne({ name: name });
+    const { id } = req.body;
+    const deleted = await Department.findByIdAndDelete(id);
     if (!deleted) {
       return res.status(404).json({
-        message: "User not found",
+        message: "Department not found",
       });
     }
     res.status(200).json({

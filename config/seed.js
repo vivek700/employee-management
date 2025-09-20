@@ -93,16 +93,18 @@ const employees = [
   },
 ];
 
-export const seedDB = async () => {
+export const seedDB = async (userId) => {
   try {
-    await Employee.deleteMany({});
-    console.log("Existing employees deleted.");
-    await Department.deleteMany({});
-    console.log("Existing departments deleted.");
-
     //insert new seed data
-    await Employee.insertMany(employees);
-    await Department.insertMany(departments);
+    await Employee.insertMany(
+      employees.map((item) => ({
+        ...item,
+        userId,
+      })),
+    );
+    await Department.insertMany(
+      departments.map((item) => ({ ...item, userId })),
+    );
     console.log("Database seeded with the data.");
   } catch (err) {
     console.log("Error seeding database: ", err);
