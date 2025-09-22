@@ -5,11 +5,10 @@ import { seedDB } from "../config/seed.js";
 const router = express.Router();
 
 router.post("/handshake", async (req, res) => {
-  const { name, email, id } = req.body;
+  const { name, email, id, isAnonymous } = req.body;
   try {
-    await User.create({ name, email, id });
+    await User.create({ name, email, id, isAnonymous });
     seedDB(id);
-
     return res.status(201).json({
       message: "New user created successfully.",
     });

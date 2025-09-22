@@ -10,6 +10,7 @@ import { seedDB } from "./config/seed.js";
 import cookieParser from "cookie-parser";
 import { authenticateUser } from "./middleware/authMiddleware.js";
 import authRouter from "./routes/auth.js";
+import resetRouter from "./routes/reset.js";
 
 dotenv.config();
 const app = express();
@@ -30,7 +31,7 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 
-app.use("/auth", authRouter);
+app.use("/auth", enforceApiKey(INTERNAL_API_KEY), authRouter);
 
 app.use(
   "/employees",
@@ -45,17 +46,7 @@ app.use(
   departmentRouter,
 );
 
-app.post("/reset-data", enforceApiKey(INTERNAL_API_KEY), async (req, res) => {
-  try {
-    await seedDB();
-    res.status(200).json({ message: "Database reset successfully." });
-  } catch (err) {
-    console.log("Error resetting database:", err);
-    res.status(500).json({
-      message: "Failed to reset database.",
-    });
-  }
-});
+app.use("/reset-data", enforceApiKey(INTERNAL_API_KEY), resetRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`Route ${req.originalUrl} not found`);

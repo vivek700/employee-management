@@ -9,6 +9,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
+    isAnonymous: Boolean,
   },
   {
     timestamps: true,

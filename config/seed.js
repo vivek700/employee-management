@@ -95,6 +95,11 @@ const employees = [
 
 export const seedDB = async (userId) => {
   try {
+    const deletedEmp = await Employee.deleteMany({ userId });
+    console.log("Existing employees deleted.", deletedEmp);
+    const deletedDep = await Department.deleteMany({ userId });
+    console.log("Existing departments deleted.", deletedDep);
+
     //insert new seed data
     await Employee.insertMany(
       employees.map((item) => ({
