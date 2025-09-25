@@ -8,7 +8,7 @@ router.post("/handshake", async (req, res) => {
   const { name, email, id, isAnonymous } = req.body;
   try {
     await User.create({ name, email, id, isAnonymous });
-    seedDB(id);
+    await seedDB(id);
     return res.status(201).json({
       message: "New user created successfully.",
     });
