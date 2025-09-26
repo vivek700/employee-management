@@ -46,7 +46,12 @@ app.use(
   departmentRouter,
 );
 
-app.use("/reset-data", enforceApiKey(INTERNAL_API_KEY), resetRouter);
+app.use(
+  "/reset-data",
+  enforceApiKey(INTERNAL_API_KEY),
+  authenticateUser,
+  resetRouter,
+);
 
 app.use((req, res, next) => {
   const error = new Error(`Route ${req.originalUrl} not found`);
