@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   console.log("this is cookies", req.cookies);
+
   const userId = req.cookies["better-auth-user"];
   try {
     const employees = await Employee.find({ userId });

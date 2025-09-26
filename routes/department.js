@@ -4,6 +4,7 @@ import Department from "../models/department.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  console.log("this is cookies", req.cookies);
   const userId = req.cookies["better-auth-user"];
   const departments = await Department.find({ userId }).exec();
   return res.json(departments);

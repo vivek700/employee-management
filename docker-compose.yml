@@ -15,7 +15,7 @@ services:
       - mongo
         # Override the CMD in your Dockerfile for development.
         # This ensures your app restarts automatically when code changes.
-    command: npm run dev
+    command: npm start
 
   mongo:
     image: mongo
