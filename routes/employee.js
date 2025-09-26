@@ -4,6 +4,7 @@ import Employee from "../models/employee.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  console.log(req.cookies);
   const userId = req.cookies["better-auth-user"];
   try {
     const employees = await Employee.find({ userId });
